@@ -8,19 +8,16 @@ on:
   # 允许在 Actions 页面手动触发此工作流
   workflow_dispatch:
 
-# 配置 GITHUB_TOKEN 权限以允许部署到 GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 允许一次并发部署
 concurrency:
   group: "pages"
   cancel-in-progress: true
 
 jobs:
-  # 仅包含一个部署任务
   deploy:
     environment:
       name: github-pages
@@ -36,10 +33,10 @@ jobs:
           node-version: lts/*
           cache: "pnpm"
 
-      - name: 启用并准备 pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest
 
       - name: 安装依赖
         run: pnpm install
@@ -53,7 +50,6 @@ jobs:
       - name: 上传构建产物
         uses: actions/upload-pages-artifact@v3
         with:
-          # 上传 dist 文件夹
           path: "./dist"
 
       - name: 部署到 GitHub Pages
