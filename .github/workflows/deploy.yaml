@@ -1,11 +1,8 @@
 name: Deploy to Pages
 
 on:
-  # 在推送到默认分支时运行
   push:
     branches: ["main"]
-
-  # 允许在 Actions 页面手动触发此工作流
   workflow_dispatch:
 
 permissions:
@@ -23,6 +20,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
     steps:
       - name: 拉取代码
         uses: actions/checkout@v5
@@ -31,12 +29,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: "pnpm"
 
-      - name: Setup pnpm
+      - name: 安装 pnpm
         uses: pnpm/action-setup@v3
         with:
           version: latest
+          run_install: false
 
       - name: 安装依赖
         run: pnpm install
