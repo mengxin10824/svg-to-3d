@@ -1,0 +1,61 @@
+name: Deploy to Pages
+
+on:
+  # 在推送到默认分支时运行
+  push:
+    branches: ["main"]
+
+  # 允许在 Actions 页面手动触发此工作流
+  workflow_dispatch:
+
+# 配置 GITHUB_TOKEN 权限以允许部署到 GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 允许一次并发部署
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # 仅包含一个部署任务
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v5
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "pnpm"
+
+      - name: 启用并准备 pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+
+      - name: 安装依赖
+        run: pnpm install
+
+      - name: 构建
+        run: pnpm run build
+
+      - name: 配置 Pages
+        uses: actions/configure-pages@v5
+
+      - name: 上传构建产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 上传 dist 文件夹
+          path: "./dist"
+
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

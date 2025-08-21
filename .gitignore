@@ -1,0 +1,48 @@
+# Node / npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Production build output
+dist/
+build/
+out/
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Runtime files
+pids/
+*.pid
+*.seed
+
+# Optional npm cache
+.npm/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# TypeScript
+*.tsbuildinfo
+
+# IDEs and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Framework caches
+.next/
+.cache/
+.vite/
+.parcel-cache/
+.serverless/
+
+# Logs
+logs/
+*.log
